@@ -9,25 +9,31 @@ client.once('ready', () => {
 });
 
 client.on('message', async message => {
-    let prefix = '$';
-    if (message.content.startsWith(prefix) && !message.author.bot) {
+    if (message.content.startsWith('$') &&
+        message.content.endsWith('$') &&
+       !message.author.bot
+    ) {
         // TODO(chuck): Uhhh, how should this actually be wrapped?
-        let formula = `\\begin{align*}
-${message.content.substr(prefix.length)}
-\\end{align*}`;
+        let formula = `${message.content.substr(1, message.content.length - 2)}`;
+        formula = formula.replace(new RegExp(' ', 'g'), '');
         console.log('formula', formula);
 
-        let params = new URLSearchParams({
+        let queryParams = {
             fcolor: 'ffffff',
             formula,
-            fsize: '36px',
+            fsize: '50px',
             mode: '0',
             out: '1',
             remhost: 'quicklatex.com',
             preamble: `\\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}`,
-        });
+        };
+        let queryList = [];
+        for (let [k, v] of Object.entries(queryParams)) {
+            queryList.push(k + '=' + v);
+        }
+        let query = queryList.join('&');
         let request = https.request({
             hostname: 'quicklatex.com',
             port: 443,
@@ -54,7 +60,7 @@ ${message.content.substr(prefix.length)}
         request.on('error', error => {
             console.error(error);
         });
-        request.write(params.toString());
+        request.write(query);
         request.end();
     }
 });
