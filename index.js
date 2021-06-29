@@ -15,11 +15,17 @@ client.on('message', async message => {
     ) {
         // TODO(chuck): Uhhh, how should this actually be wrapped?
         let formula = `${message.content.substr(1, message.content.length - 2)}`;
-        formula = formula.replace(new RegExp(' ', 'g'), '');
+        formula = `\\setlength{\\fboxsep}{.5em}
+\\renewcommand\\fbox{\\fcolorbox{black}{black}}\\color{white}
+\\fbox{
+    \\begin{center}
+    ${formula} \\nonumber
+    \\end{center}
+}`;
+
         console.log('formula', formula);
 
         let queryParams = {
-            fcolor: 'ffffff',
             formula,
             fsize: '50px',
             mode: '0',
@@ -27,7 +33,10 @@ client.on('message', async message => {
             remhost: 'quicklatex.com',
             preamble: `\\usepackage{amsmath}
 \\usepackage{amsfonts}
-\\usepackage{amssymb}`,
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{mhchem}
+\\usepackage{xcolor}`,
         };
         let queryList = [];
         for (let [k, v] of Object.entries(queryParams)) {
