@@ -14,7 +14,8 @@ client.on('message', async message => {
        !message.author.bot
     ) {
         // TODO(chuck): Uhhh, how should this actually be wrapped?
-        let formula = `${message.content.substr(1, message.content.length - 2)}`;
+        let formula = message.content.slice(1, -1);
+        console.log('formula', formula);
         formula = `\\setlength{\\fboxsep}{.5em}
 \\renewcommand\\fbox{\\fcolorbox{black}{black}}\\color{white}
 \\fbox{
@@ -22,8 +23,7 @@ client.on('message', async message => {
     ${formula} \\nonumber
     \\end{center}
 }`;
-
-        console.log('formula', formula);
+        console.log('wrapped formula', formula);
 
         let queryParams = {
             formula,
