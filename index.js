@@ -61,9 +61,7 @@ client.on('message', async message => {
 
                 */
                 let imageUrl = data.toString().split('\n')[1].split(' ')[0];
-                let embed = new Discord.MessageEmbed()
-                    .setImage(imageUrl);
-                message.channel.send(embed);
+                message.channel.send(imageUrl);
             });
         });
         request.on('error', error => {
