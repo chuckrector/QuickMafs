@@ -13,36 +13,6 @@ client.on('message', async message => {
         message.content.endsWith('$') &&
        !message.author.bot
     ) {
-        // TODO(chuck): Uhhh, how should this actually be wrapped?
-        let formula = message.content.slice(1, -1);
-        console.log('formula', formula);
-        formula = `\\setlength{\\fboxsep}{.5em}
-\\renewcommand\\fbox{\\fcolorbox{black}{black}}\\color{white}
-\\fbox{
-    \\begin{center}
-    ${formula} \\nonumber
-    \\end{center}
-}`;
-        console.log('wrapped formula', formula);
-
-        let queryParams = {
-            formula,
-            fsize: '50px',
-            mode: '0',
-            out: '1',
-            remhost: 'quicklatex.com',
-            preamble: `\\usepackage{amsmath}
-\\usepackage{amsfonts}
-\\usepackage{amssymb}
-\\usepackage{graphicx}
-\\usepackage{mhchem}
-\\usepackage{xcolor}`,
-        };
-        let queryList = [];
-        for (let [k, v] of Object.entries(queryParams)) {
-            queryList.push(k + '=' + v);
-        }
-        let query = queryList.join('&');
         let request = https.request({
             hostname: 'quicklatex.com',
             port: 443,
@@ -67,6 +37,36 @@ client.on('message', async message => {
         request.on('error', error => {
             console.error(error);
         });
+
+        // TODO(chuck): Uhhh, how should this actually be wrapped?
+        let formula = message.content.slice(1, -1);
+        console.log('formula', formula);
+        let wrappedFormula = `\\setlength{\\fboxsep}{.5em}
+\\renewcommand\\fbox{\\fcolorbox{black}{black}}\\color{white}
+\\fbox{
+    \\begin{center}
+    ${formula} \\nonumber
+    \\end{center}
+}`;
+        console.log('wrapped formula', wrappedFormula);
+        let queryParams = {
+            formula: wrappedFormula,
+            fsize: '50px',
+            mode: '0',
+            out: '1',
+            remhost: 'quicklatex.com',
+            preamble: `\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{mhchem}
+\\usepackage{xcolor}`,
+        };
+        let queryList = [];
+        for (let [k, v] of Object.entries(queryParams)) {
+            queryList.push(k + '=' + v);
+        }
+        let query = queryList.join('&');
         request.write(query);
         request.end();
     }
