@@ -9,3 +9,5 @@ Install Node.js. The version doesn't matter. https://nodejs.org/en/
 Go to the Discord developer portal, create an app, make it a bot, then add a file named `bot_token.txt` and paste your bot's token into it.
 
 Start the bot with `node .`
+
+![Example of QuickMafs](quick_mafs.png)
