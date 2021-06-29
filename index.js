@@ -49,7 +49,7 @@ client.on('message', async message => {
     \\end{center}
 }`;
         console.log('wrapped formula', wrappedFormula);
-        let queryParams = {
+        let formData = {
             formula: wrappedFormula,
             fsize: '50px',
             mode: '0',
@@ -62,12 +62,15 @@ client.on('message', async message => {
 \\usepackage{mhchem}
 \\usepackage{xcolor}`,
         };
-        let queryList = [];
-        for (let [k, v] of Object.entries(queryParams)) {
-            queryList.push(k + '=' + v);
+        let fusedPairs = [];
+        for (let [k, v] of Object.entries(formData)) {
+            fusedPairs.push(k + '=' + v);
         }
-        let query = queryList.join('&');
-        request.write(query);
+        // TODO(chuck): Shouldn't this be encoded somehow? What if the formula
+        // contains & characters?
+        let fusedRequest = fusedPairs.join('&');
+        console.log('fused request', fusedRequest);
+        request.write(fusedRequest);
         request.end();
     }
 });
