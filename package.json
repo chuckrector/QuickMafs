@@ -1,0 +1,11 @@
+{
+  "name": "QuickMafs",
+  "version": "1.0.0",
+  "description": "2+2 is 4. Minus 1, that's 3. Quick mafs!",
+  "main": "index.js",
+  "author": "Chuck Rector <choosetheforce@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.5.3"
+  }
+}
